@@ -1,8 +1,22 @@
-// const express = require("express");
+// import express from "express";
 import express from "express";
-import fs from "fs/promises";  // Import fs using ESM syntax
+import fs from "fs/promises";
+import dotenv from 'dotenv';
+import cors from "cors";
+import morgan from 'morgan'; // Import Morgan
+// import mongoose from "mongoose";
+import connectDB from "./config/db.js";
 
+dotenv.config();
 const app = express();
+
+app.use(cors());
+
+// Use Morgan middleware for logging
+app.use(morgan('dev'));
+
+// Mongoose connection
+connectDB(); //connect to mongodb
 
 // route middleware
 (async () => {
@@ -12,5 +26,6 @@ const app = express();
         app.use("/api", module.default);
     });
 
-    app.listen(8000, () => console.log("app running on port 8000"));
+    const port = process.env.PORT;
+    app.listen(port, () => console.log(`App running on port ${port}`));
 })();
